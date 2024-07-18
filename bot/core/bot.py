@@ -104,14 +104,14 @@ class CryptoBot:
 			if 'application/json' in content_type:
 				response_json = await response.json()
 				if response_json.get('message', '') != 'same day':
-					log.info(f"{self.session_name} | Unknown response in daily reward: {str(response_json)}")
+					log.warning(f"{self.session_name} | Unknown response in daily reward: {str(response_json)}")
 				return False
 			else:
 				response_text = await response.text()
 				if response_text == 'OK':
 					return True
 				else:
-					log.info(f"{self.session_name} | Unknown response in daily reward: {response_text}")
+					log.warning(f"{self.session_name} | Unknown response in daily reward: {response_text}")
 					return False
 		except Exception as error:
 			log.error(f"{self.session_name} | Daily reward error: {str(error)}")
@@ -168,7 +168,7 @@ class CryptoBot:
 					log.success(f"{self.session_name} | Claimed {claim_amount} points")
 					self.errors = 0
 				else:
-					log.info(f"{self.session_name} | Unable to claim friend reward")
+					log.warning(f"{self.session_name} | Unable to claim friend reward")
 			else:
 				log.info(f"{self.session_name} | Reward for friends not available")
 		except Exception as error:
@@ -231,7 +231,7 @@ class CryptoBot:
 						elif subtask['status'] == 'READY_FOR_CLAIM':
 							await self.http_client.post(f"https://game-domain.blum.codes/api/v1/tasks/{subtask['id']}/claim")
 							await asyncio.sleep(1)
-							log.success(f"{self.session_name} | Subtask {subtask['id']} completed")
+							log.info(f"{self.session_name} | Subtask {subtask['id']} completed")
 							self.errors = 0
 							await asyncio.sleep(random.randint(2, 4))
 				elif task['status'] == 'NOT_STARTED':
