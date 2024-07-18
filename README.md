@@ -11,6 +11,7 @@
 | Binding a proxy to a session                                   |     ✅     |
 | Claim daily grant                                              |     ✅     |
 | Claim reward for friends                                       |     ✅     |
+| Claim reward for tasks                                         |     ✅     |
 | Automatic farming                                              |     ✅     |
 | Automatic games                                                |     ✅     |
 | Docker                                                         |     ✅     |
