@@ -217,34 +217,25 @@ class CryptoBot:
 			response_json = await response.json()
 			started = 0
 			completed = 0
-			for task in response_json:
-				if started == 2: break # start a maximum of 2 tasks at time
-				if completed == 2: break # complete a maximum of 2 tasks at time
-				if task['status'] == 'FINISHED': continue
-				log.info(f"{self.session_name} | Processing task {task['id']}")
-				if 'subTasks' in task:
-					for subtask in task['subTasks']:
-						if subtask['status'] == 'NOT_STARTED':
-							log.info(f"{self.session_name} | Processing subtask {subtask['id']}")
-							await self.http_client.post(f"https://game-domain.blum.codes/api/v1/tasks/{subtask['id']}/start")
-							await asyncio.sleep(random.randint(4, 8))
-						elif subtask['status'] == 'READY_FOR_CLAIM':
-							await self.http_client.post(f"https://game-domain.blum.codes/api/v1/tasks/{subtask['id']}/claim")
-							await asyncio.sleep(1)
-							log.info(f"{self.session_name} | Subtask {subtask['id']} completed")
-							self.errors = 0
-							await asyncio.sleep(random.randint(2, 4))
-				elif task['status'] == 'NOT_STARTED':
-					await self.http_client.post(f"https://game-domain.blum.codes/api/v1/tasks/{task['id']}/start")
-					await asyncio.sleep(random.randint(4, 8))
-					started += 1
-				elif task['status'] == 'READY_FOR_CLAIM':
-					await self.http_client.post(f"https://game-domain.blum.codes/api/v1/tasks/{task['id']}/claim")
-					await asyncio.sleep(1)
-					log.success(f"{self.session_name} | Task {task['id']} completed and reward claimed")
-					self.errors = 0
-					await asyncio.sleep(random.randint(2, 4))
-					completed += 1
+			for category in response_json:
+				tasks = category.get('tasks', [])
+				for task in tasks:
+					if started == 2: break # start a maximum of 2 tasks at time
+					if completed == 2: break # complete a maximum of 2 tasks at time
+					if task['status'] == 'FINISHED': continue
+					if task['isHidden'] == True: continue
+					log.info(f"{self.session_name} | Processing task {task['id']}")
+					if task['status'] == 'NOT_STARTED':
+						await self.http_client.post(f"https://game-domain.blum.codes/api/v1/tasks/{task['id']}/start")
+						await asyncio.sleep(random.randint(4, 8))
+						started += 1
+					elif task['status'] == 'READY_FOR_CLAIM':
+						await self.http_client.post(f"https://game-domain.blum.codes/api/v1/tasks/{task['id']}/claim")
+						await asyncio.sleep(1)
+						log.success(f"{self.session_name} | Task {task['id']} completed and reward claimed")
+						self.errors = 0
+						await asyncio.sleep(random.randint(2, 4))
+						completed += 1
 		except Exception as error:
 			log.error(f"{self.session_name} | Tasks error: {error}")
 			self.errors += 1
