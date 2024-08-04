@@ -1,4 +1,4 @@
-# Бот для [Blum](https://alexell.ru/cc/blum)
+# Бот для [Blum](https://alexell.pro/cc/blum)
 
 ![img1](.github/images/demo.png)
 

@@ -1,4 +1,4 @@
-# Bot for [Blum](https://alexell.ru/cc/blum)
+# Bot for [Blum](https://alexell.pro/cc/blum)
 
 ![img1](.github/images/demo.png)
 

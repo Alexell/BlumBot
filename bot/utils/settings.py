@@ -23,5 +23,6 @@ class Settings(BaseSettings):
 
 try:
 	config = Settings()
-except:
+except Exception as error:
+	log.error(error)
 	config = False
