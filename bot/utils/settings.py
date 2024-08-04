@@ -1,4 +1,5 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from bot.utils.logger import log
 
 logo = """
 
