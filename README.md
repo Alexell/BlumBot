@@ -22,6 +22,7 @@
 | **API_ID / API_HASH**   | Platform data for launching a Telegram session (default: Android)          |
 | **GAME_POINTS**         | Random number of points per game (e.g. [100,200], max. 280)                |
 | **SLEEP_BETWEEN_GAME**  | Random delay between games (e.g. [10,20])                                  |
+| **SLEEP_BETWEEN_START** | Sleep before start each session (e.g. [20,360])                           |
 | **ERRORS_BEFORE_STOP**  | The number of failed requests after which the bot will stop                |
 | **USE_PROXY_FROM_FILE** | Whether to use proxy from the `proxies.txt` file (True / False)            |
 
