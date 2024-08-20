@@ -310,6 +310,7 @@ class CryptoBot:
 					self.balance = profile['availableBalance']
 					log.info(f"{self.session_name} | Balance: {self.balance}")
 					
+					await asyncio.sleep(random.randint(2, 4))
 					await self.perform_friend_rewards()
 					
 					games_left = profile['playPasses']
@@ -317,7 +318,8 @@ class CryptoBot:
 					farming = profile.get('farming', {})
 					farm_start = farming.get('startTime', 0) // 1000
 					farm_end = farming.get('endTime', 0) // 1000
-						
+					
+					await asyncio.sleep(random.randint(2, 4))
 					if farm_start == 0 or farm_end == 0:
 						log.info(f"{self.session_name} | Start farming...")
 						if await self.farming_start():
@@ -332,8 +334,11 @@ class CryptoBot:
 							log.success(f"{self.session_name} | Farming restarted successfully")
 							self.errors = 0
 					
+					await asyncio.sleep(random.randint(2, 4))
 					await self.perform_tasks()
+					
 					if games_left > 0:
+						await asyncio.sleep(random.randint(2, 4))
 						await self.perform_games(games=games_left)
 					
 					# Log current balance
