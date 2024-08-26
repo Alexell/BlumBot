@@ -337,7 +337,7 @@ class CryptoBot:
 					await asyncio.sleep(random.randint(2, 4))
 					await self.perform_tasks()
 					
-					if games_left > 0:
+					if config.GAMES_ENABLED and games_left > 0:
 						await asyncio.sleep(random.randint(2, 4))
 						await self.perform_games(games=games_left)
 					

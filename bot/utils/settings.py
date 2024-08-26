@@ -17,6 +17,7 @@ class Settings(BaseSettings):
 	API_ID: int
 	API_HASH: str
 	
+	GAMES_ENABLED: bool = True
 	GAME_POINTS: list[int] = [100, 200]
 	SLEEP_BETWEEN_GAME: list[int] = [10, 20]
 	
