@@ -75,9 +75,14 @@ class CryptoBot:
 			refresh_token = token.get('refresh', '')
 			log.success(f"{self.session_name} | Login successful")
 			return access_token, refresh_token
+		except aiohttp.ClientResponseError as error:
+			if error.status == 401: self.authorized = False
+			self.errors += 1
+			log.error(f"{self.session_name} | Login http error: {error}")
+			await asyncio.sleep(delay=3)
+			return False, ''
 		except Exception as error:
 			log.error(f"{self.session_name} | Login error: {error}")
-			self.errors += 1
 			await asyncio.sleep(delay=3)
 			return False, ''
 
@@ -89,8 +94,13 @@ class CryptoBot:
 			response.raise_for_status()
 			response_json = await response.json()
 			return response_json
-		except Exception as error:
+		except aiohttp.ClientResponseError as error:
+			if error.status == 401: self.authorized = False
 			self.errors += 1
+			log.error(f"{self.session_name} | Profile data http error: {error}")
+			await asyncio.sleep(delay=3)
+			return {}
+		except Exception as error:
 			log.error(f"{self.session_name} | Profile data error: {error}")
 			await asyncio.sleep(delay=3)
 			return {}
@@ -113,6 +123,10 @@ class CryptoBot:
 				else:
 					log.warning(f"{self.session_name} | Unknown response in daily reward: {response_text}")
 					return False
+		except aiohttp.ClientResponseError as error:
+			if error.status == 401: self.authorized = False
+			log.error(f"{self.session_name} | Daily reward http error: {str(error)}")
+			return False
 		except Exception as error:
 			log.error(f"{self.session_name} | Daily reward error: {str(error)}")
 			return False
@@ -129,9 +143,14 @@ class CryptoBot:
 				self.balance = int(float(balance))
 				return True
 			else: return False
+		except aiohttp.ClientResponseError as error:
+			if error.status == 401: self.authorized = False
+			self.errors += 1
+			log.error(f"{self.session_name} | Claim http error: {error}")
+			await asyncio.sleep(delay=3)
+			return False
 		except Exception as error:
 			log.error(f"{self.session_name} | Claim error: {error}")
-			self.errors += 1
 			await asyncio.sleep(delay=3)
 			return False
 			
@@ -142,9 +161,14 @@ class CryptoBot:
 			response = await self.http_client.post(url)
 			response.raise_for_status()
 			return True
+		except aiohttp.ClientResponseError as error:
+			if error.status == 401: self.authorized = False
+			self.errors += 1
+			log.error(f"{self.session_name} | Starting farm http error: {error}")
+			await asyncio.sleep(delay=3)
+			return False
 		except Exception as error:
 			log.error(f"{self.session_name} | Starting farm error: {error}")
-			self.errors += 1
 			await asyncio.sleep(delay=3)
 			return False
 
@@ -171,9 +195,13 @@ class CryptoBot:
 					log.warning(f"{self.session_name} | Unable to claim friend reward")
 			else:
 				log.info(f"{self.session_name} | Reward for friends not available")
+		except aiohttp.ClientResponseError as error:
+			if error.status == 401: self.authorized = False
+			self.errors += 1
+			log.error(f"{self.session_name} | Friend reward http error: {error}")
+			await asyncio.sleep(delay=3)
 		except Exception as error:
 			log.error(f"{self.session_name} | Friend reward error: {error}")
-			self.errors += 1
 			await asyncio.sleep(delay=3)
 
 	async def perform_games(self, games: int) -> None:
@@ -203,9 +231,13 @@ class CryptoBot:
 						self.errors = 0
 						games -= 1
 						await asyncio.sleep(random.randint(*config.SLEEP_BETWEEN_GAME))
+			except aiohttp.ClientResponseError as error:
+				if error.status == 401: self.authorized = False
+				self.errors += 1
+				log.error(f"{self.session_name} | Games http error: {error}")
+				await asyncio.sleep(delay=3)
 			except Exception as error:
 				log.error(f"{self.session_name} | Games error: {error}")
-				self.errors += 1
 				await asyncio.sleep(delay=3)
 			
 	async def perform_tasks(self) -> None:
@@ -236,6 +268,11 @@ class CryptoBot:
 						self.errors = 0
 						await asyncio.sleep(random.randint(2, 4))
 						completed += 1
+		except aiohttp.ClientResponseError as error:
+			if error.status == 401: self.authorized = False
+			self.errors += 1
+			log.error(f"{self.session_name} | Tasks http error: {error}")
+			await asyncio.sleep(delay=3)
 		except Exception as error:
 			log.error(f"{self.session_name} | Tasks error: {error}")
 			self.errors += 1
@@ -252,8 +289,13 @@ class CryptoBot:
 			self.access_token = response_json.get('access', '')
 			self.refresh_token = response_json.get('refresh', '')
 			return True if self.access_token != '' else False
+		except aiohttp.ClientResponseError as error:
+			if error.status == 401: self.authorized = False
+			self.errors += 1
+			log.warning(f"{self.session_name} | Refresh auth tokens http error")
+			return False
 		except Exception:
-			log.warning(f"{self.session_name} | Unable to refresh auth tokens")
+			log.warning(f"{self.session_name} | Refresh auth tokens error")
 			return False
 
 	async def check_proxy(self, proxy: Proxy) -> None:
