@@ -62,7 +62,7 @@ class CryptoBot:
 			await asyncio.sleep(delay=3)
 
 	async def login(self, init_data: str) -> tuple[str | bool, str]:
-		url = 'https://gateway.blum.codes/v1/auth/provider/PROVIDER_TELEGRAM_MINI_APP'
+		url = 'https://user-domain.blum.codes/api/v1/auth/provider/PROVIDER_TELEGRAM_MINI_APP'
 		try:
 			log.info(f"{self.session_name} | Trying to login...")
 			self.http_client.headers.pop('Authorization', None)
