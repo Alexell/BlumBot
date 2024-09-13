@@ -173,8 +173,8 @@ class CryptoBot:
 			return False
 
 	async def perform_friend_rewards(self) -> None:
-		balance_url = 'https://gateway.blum.codes/v1/friends/balance'
-		claim_url  = 'https://gateway.blum.codes/v1/friends/claim'
+		balance_url = 'https://user-domain.blum.codes/v1/friends/balance'
+		claim_url  = 'https://user-domain.blum.codes/v1/friends/claim'
 		try:
 			await self.http_client.options(balance_url)
 			response = await self.http_client.post(balance_url)
@@ -279,7 +279,7 @@ class CryptoBot:
 			await asyncio.sleep(delay=3)
 
 	async def refresh_tokens(self) -> str | bool:
-		url = 'https://gateway.blum.codes/v1/auth/refresh'
+		url = 'https://user-domain.blum.codes/v1/auth/refresh'
 		try:
 			await self.http_client.options(url)
 			json_data = {'refresh': self.refresh_token}
