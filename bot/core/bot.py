@@ -390,9 +390,11 @@ class CryptoBot:
 						if await self.farming_claim():
 							log.success(f"{self.session_name} | Claim successful")
 							self.errors = 0
+						else: continue
 						if await self.farming_start():
 							log.success(f"{self.session_name} | Farming restarted successfully")
 							self.errors = 0
+						else: continue
 					
 					await asyncio.sleep(random.randint(2, 4))
 					await self.perform_tasks()
