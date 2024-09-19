@@ -173,13 +173,13 @@ class CryptoBot:
 			return False
 
 	async def perform_friend_rewards(self) -> None:
-		balance_url = 'https://user-domain.blum.codes/v1/friends/balance'
-		claim_url  = 'https://user-domain.blum.codes/v1/friends/claim'
+		balance_url = 'https://user-domain.blum.codes/api/v1/friends/balance'
+		claim_url  = 'https://user-domain.blum.codes/api/v1/friends/claim'
 		try:
 			await self.http_client.options(balance_url)
-			response = await self.http_client.post(balance_url)
+			response = await self.http_client.get(balance_url)
 			response_json = await response.json()
-			claim_amount = response_json.get('amountForClaim', 0)
+			claim_amount = float(response_json.get('amountForClaim', 0))
 			can_claim = response_json.get('canClaim', False)
 			if claim_amount > 0 and can_claim is not False:
 				log.info(f"{self.session_name} | Reward for friends available")
@@ -187,9 +187,9 @@ class CryptoBot:
 				await self.http_client.options(claim_url)
 				response = await self.http_client.post(claim_url)
 				response_json = await response.json()
-				claim_amount = response_json.get('claimBalance', 0)
+				claim_amount = float(response_json.get('claimBalance', 0))
 				if claim_amount > 0:
-					log.success(f"{self.session_name} | Claimed {claim_amount} points")
+					log.success(f"{self.session_name} | Claimed {str(claim_amount)} points")
 					self.errors = 0
 				else:
 					log.warning(f"{self.session_name} | Unable to claim friend reward")
@@ -297,7 +297,7 @@ class CryptoBot:
 			await asyncio.sleep(delay=3)
 
 	async def refresh_tokens(self) -> str | bool:
-		url = 'https://user-domain.blum.codes/v1/auth/refresh'
+		url = 'https://user-domain.blum.codes/api/v1/auth/refresh'
 		try:
 			await self.http_client.options(url)
 			json_data = {'refresh': self.refresh_token}
